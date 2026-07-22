@@ -1,0 +1,42 @@
+/* Layout geral */
+body {
+    background: var(--bg);
+    color: #111;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    background: #fff;
+    box-shadow: var(--shadow);
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 200px;
+    background: var(--card);
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.content {
+    flex: 1;
+}
+
+.footer {
+    text-align: center;
+    padding: 12px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.hidden {
+    display: none;
+}

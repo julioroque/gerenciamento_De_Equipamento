@@ -1,0 +1,8 @@
+/* Variáveis de tema */
+:root {
+  --bg:#f6f8fb;
+  --card:#fff;
+  --accent:#2b6ef6;
+  --muted:#6b7280;
+  --shadow:0 6px 18px rgba(20,20,40,0.06);
+}
