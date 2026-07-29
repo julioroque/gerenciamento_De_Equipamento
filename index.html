@@ -6,84 +6,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Iluminação</title>
     <!-- CSS -->
-     <link rel="stylesheet" href="css/reset.css">
-     <link rel="stylesheet" href="css/theme.css">
-     <link rel="stylesheet" href="css/components.css">
-     <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
 </head>
 
 <body>
     <header class="topbar">
         <h1>Controle de Iluminação</h1>
         <div class="user">
-            Usuario: <strong>Operador</strong>
+            Usuário: <strong id="userRole">Não logado</strong>
+            <button id="btnLogout" class="btn danger">Sair</button>
         </div>
     </header>
 
     <main class="container">
-        <aside class="sidebar">
-            <button id="btnCatalog" class="btn">Catálogo</button>
-            <button id="btnNewReserv" class="btn">Nova Reserva</button>
-            <button id="btnReservations" class="btn">Reservas</button>
-        </aside>
 
-        <section class="content">
-            <div id="catalogView" class="view">
-                <h2>Catálogo</h2>
+        <!-- Tela de login -->
+        <section id="loginScreen">
+            <h2>Login</h2>
+            <form id="loginForm" class="card">
+                <label>Usuário <input id="username" required></label>
+                <label>Senha <input id="password" type="password" required></label>
+                <button type="submit" class="btn primary">Entrar</button>
+            </form>
+        </section>
 
-                <form id="addEquipmentForm" class="card">
-                    <h3>Adicionar / editar equipamento</h3>
-                    <input id="equipmentId" name="id" type="hidden">
-                    <div class="row">
-                        <input id="equipmentName" name="name" placeholder="Nome do equipamento" required>
-                        <input id="equipmentCode" name="code" placeholder="Código" required>
-                        <input id="equipmentTotal" name="total" type="number" min="1" value="1" required>
-                    </div>
-                    <button type="submit" class="btn primary">Adicionar ao catálogo</button>
-                </form>
+        <!-- Sistema (inicialmente escondido) -->
+        <section id="systemScreen" class="hidden">
+            <aside class="sidebar">
+                <button id="btnCatalog" class="btn">Catálogo</button>
+                <button id="btnNewReserv" class="btn">Nova Reserva</button>
+                <button id="btnReservations" class="btn">Reservas</button>
+                
+            </aside>
 
-                <div id="catalogList" class="grid"></div>
-                <button id="btnAddSample" class="btn secondary">Adicionar itens de exemplo</button>
-            </div>
-
-            <div id="newView" class="view hidden">
-                <h2>Nova Reserva</h2>
-                <form id="reservForm" class="card">
-                    <label>Cliente <input name="client" required></label>
-                    <label>Local <input name="location" required></label>
-                    <label>Data <input type="date" name="date" required></label>
-
-                    <div class="itemsBlock">
-                        <h3>Itens</h3>
+            <section class="content">
+                <!-- Catálogo -->
+                <div id="catalogView" class="view hidden">
+                    <h2>Catálogo</h2>
+                    <form id="addEquipmentForm" class="card">
+                        <h3>Adicionar / editar equipamento</h3>
+                        <input id="equipmentId" name="id" type="hidden">
                         <div class="row">
-                            <select id="itemSelect" name="itemSelect"></select>
-                            <input id="itemQty" type="number" min="1" value="1">
-                            <button id="addItemBtn" type="button" class="btn">Adicionar</button>
+                            <input id="equipmentName" name="name" placeholder="Nome do equipamento" required>
+                            <input id="equipmentCode" name="code" placeholder="Código" required>
+                            <input id="equipmentTotal" name="total" type="number" min="1" value="1" required>
                         </div>
-                        <ul id="selectedItems" class="list"></ul>
-                    </div>
-                    <div class="actions">
-                        <button type="submit" class="btn primary">Confirmar</button>
-                        <button id="cancelReserv" type="button" class="btn">Cancelar</button>
-                    </div>
-                </form>
-            </div>
+                        <button type="submit" class="btn primary">Adicionar ao catálogo</button>
+                    </form>
+                    <div id="catalogList" class="grid"></div>
+                    <button id="btnAddSample" class="btn secondary">Adicionar itens de exemplo</button>
+                </div>
 
-            <div id="reservationsView" class="view hidden">
-                <h2>Reservas</h2>
-                <div id="reservationsList"></div>
-            </div>
+                <!-- Nova Reserva -->
+                <div id="newView" class="view hidden">
+                    <h2>Nova Reserva</h2>
+                    <form id="reservForm" class="card">
+                        <label>Cliente <input name="client" required></label>
+                        <label>Local <input name="location" required></label>
+                        <label>Data <input type="date" name="date" required></label>
+
+                        <div class="itemsBlock">
+                            <h3>Itens</h3>
+                            <div class="row">
+                                <select id="itemSelect" name="itemSelect"></select>
+                                <input id="itemQty" type="number" min="1" value="1">
+                                <button id="addItemBtn" type="button" class="btn">Adicionar</button>
+                            </div>
+                            <ul id="selectedItems" class="list"></ul>
+                        </div>
+                        <div class="actions">
+                            <button type="submit" class="btn primary">Confirmar</button>
+                            <button id="cancelReserv" type="button" class="btn">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Reservas -->
+                <div id="reservationsView" class="view hidden">
+                    <h2>Reservas</h2>
+                    <div id="reservationsList"></div>
+                </div>
+            </section>
         </section>
     </main>
 
-<footer class="footer">Protótipo • Dados no navegador</footer>
+    <footer class="footer">Protótipo • Dados no navegador</footer>
 
-<!-- JS separados -->
-<script src="js/storage.js"></script>
-<script src="js/catalog.js"></script>
-<script src="js/reservations.js"></script>
-<script src="js/app.js"></script>
+    <!-- JS separados -->
+    <script src="js/storage.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/reservations.js"></script>
+    <script src="js/app.js"></script>
 
 </body>
-
 </html>

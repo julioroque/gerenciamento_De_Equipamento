@@ -1,31 +1,43 @@
 // Este arquivo cuida da parte do catálogo de equipamentos
 
 // Renderizar o catálogo na tela
-function renderCatalog() {
-    const list = document.getElementById("catalogList");
-    if (!list) return;
+function renderCatalog(){
+  const list = document.getElementById('catalogList');
+  list.innerHTML = '';
+  const items = loadItems();
 
-    list.innerHTML = '';
-    const items = loadItems();
+  if(items.length === 0){
+    list.innerHTML = '<div class="card">Nenhum equipamento cadastrado.</div>';
+    return;
+  }
 
-    if (items.length === 0) {
-        list.innerHTML = '<div class="card">Nenhum item cadastrado.</div>';
-        return;
-    }
+  items.forEach(it=>{
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <strong>${it.name}</strong> (${it.code})<br/>
+      Total: ${it.total}
+      <div class="row">
+        ${currentUserRole === 'chefe' ? `
+          <button class="btn" data-edit-id="${it.id}">Editar</button>
+          <button class="btn danger" data-remove-id="${it.id}">Remover</button>
+        ` : ``}
+      </div>
+    `;
+    list.appendChild(div);
+  });
 
-    items.forEach(it => {
-        const div = document.createElement('div');
-        div.className = 'itemCard';
-        div.innerHTML = `
-            <h4>${it.name}</h4>
-            <p>Código: ${it.code} • Total: ${it.total}</p>
-            <div class="row">
-                <button type="button" class="btn" data-edit-id="${it.id}">Editar</button>
-                <button type="button" class="btn" data-remove-id="${it.id}">Remover</button>
-            </div>
-        `;
-        list.appendChild(div);
+  // Eventos de edição/remoção só se chefe
+  if(currentUserRole === 'chefe'){
+    list.querySelectorAll('[data-edit-id]').forEach(btn=>{
+      btn.addEventListener('click', ()=> editEquipment(btn.getAttribute('data-edit-id')));
     });
+    list.querySelectorAll('[data-remove-id]').forEach(btn=>{
+      btn.addEventListener('click', ()=> removeEquipment(btn.getAttribute('data-remove-id')));
+    });
+  }
+
+
 
     list.querySelectorAll('[data-remove-id]').forEach(button => {
         button.addEventListener('click', () => {
