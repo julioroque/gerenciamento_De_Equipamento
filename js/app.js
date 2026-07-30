@@ -99,23 +99,69 @@ function adjustStockForReservation(reservation, multiplier) {
   renderCatalog();
 }
 
-// Lógica para adicionar itens à reserva
-document.getElementById('addItemBtn').addEventListener('click', () => {
-  const itemId = parseInt(document.getElementById('itemSelect').value, 10);
-  const qty = parseInt(document.getElementById('itemQty').value, 10);
-  const items = loadItems();
-  const it = items.find(x => x.id === itemId);
+function upsertSelectedItem(itemId, qty, itemName, { replaceExisting = false } = {}) {
+  const existingIndex = selected.findIndex(s => s.item_id === itemId);
 
-  if (!it) { alert('Item inválido'); return; }
-  const date = document.querySelector('input[name="date"]').value;
-  if (!date) { alert('Escolha a data do evento primeiro'); return; }
-  const editingId = Number(document.getElementById('reservForm').getAttribute('data-editing-id') || 0);
-  const avail = availableForDate(itemId, date, editingId);
-  if (qty > avail) { alert(`Disponível para ${date}: ${avail}`); return; }
+  if (existingIndex >= 0) {
+    if (replaceExisting) {
+      selected[existingIndex] = { ...selected[existingIndex], quantity: qty };
+    } else {
+      selected[existingIndex] = { ...selected[existingIndex], quantity: qty };
+    }
+  } else {
+    selected.push({ item_id: itemId, name: itemName, quantity: qty });
+  }
 
-  selected.push({ item_id: itemId, name: it.name, quantity: qty });
   renderSelected();
-});
+}
+
+// Lógica para adicionar itens à reserva
+const addItemBtn = document.getElementById('addItemBtn');
+if (addItemBtn) {
+  addItemBtn.addEventListener('click', () => {
+    const itemId = parseInt(document.getElementById('itemSelect').value, 10);
+    const qty = parseInt(document.getElementById('itemQty').value, 10);
+    const items = loadItems();
+    const it = items.find(x => x.id === itemId);
+
+    if (!it) { alert('Item inválido'); return; }
+    const date = document.querySelector('input[name="date"]').value;
+    if (!date) { alert('Escolha a data do evento primeiro'); return; }
+    const editingId = Number(document.getElementById('reservForm').getAttribute('data-editing-id') || 0);
+    const avail = availableForDate(itemId, date, editingId);
+    if (qty > avail) { alert(`Disponível para ${date}: ${avail}`); return; }
+
+    upsertSelectedItem(itemId, qty, it.name, { replaceExisting: true });
+  });
+}
+
+// Atualiza um item já adicionado sem criar duplicidade
+const updateItemBtn = document.getElementById('updateItemBtn');
+if (updateItemBtn) {
+  updateItemBtn.addEventListener('click', () => {
+    const itemId = parseInt(document.getElementById('itemSelect').value, 10);
+    const qty = parseInt(document.getElementById('itemQty').value, 10);
+    const items = loadItems();
+    const it = items.find(x => x.id === itemId);
+
+    if (!it) { alert('Item inválido'); return; }
+
+    const existing = selected.find(s => s.item_id === itemId);
+    if (!existing) {
+      alert('Selecione um item já adicionado para atualizar.');
+      return;
+    }
+
+    const date = document.querySelector('input[name="date"]').value;
+    if (!date) { alert('Escolha a data do evento primeiro'); return; }
+    const editingId = Number(document.getElementById('reservForm').getAttribute('data-editing-id') || 0);
+    const avail = availableForDate(itemId, date, editingId);
+    if (qty > avail) { alert(`Disponível para ${date}: ${avail}`); return; }
+
+    upsertSelectedItem(itemId, qty, it.name, { replaceExisting: true });
+    alert('Item atualizado com sucesso.');
+  });
+}
 
 // Renderiza itens selecionados na reserva
 function renderSelected() {
@@ -135,9 +181,11 @@ function renderSelected() {
 }
 
 // Submissão do formulário de reserva
-document.getElementById('reservForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const client = e.target.client.value.trim();
+const reservForm = document.getElementById('reservForm');
+if (reservForm) {
+  reservForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const client = e.target.client.value.trim();
   const location = e.target.location.value.trim();
   const date = e.target.date.value;
 
@@ -205,23 +253,24 @@ document.getElementById('reservForm').addEventListener('submit', (e) => {
     alert('Reserva criada com sucesso.');
   }
 
-  saveReservations(reservations);
+    saveReservations(reservations);
 
-  // Limpa formulário
-  selected = [];
-  e.target.reset();
-  e.target.removeAttribute('data-editing-id');
+    // Limpa formulário
+    selected = [];
+    e.target.reset();
+    e.target.removeAttribute('data-editing-id');
 
-  // 🔧 Reabilita campos caso tenham sido bloqueados para funcionário
-  e.target.client.disabled = false;
-  e.target.location.disabled = false;
-  e.target.date.disabled = false;
+    // 🔧 Reabilita campos caso tenham sido bloqueados para funcionário
+    e.target.client.disabled = false;
+    e.target.location.disabled = false;
+    e.target.date.disabled = false;
 
-  const submitBtn = e.target.querySelector('button[type="submit"]');
-  if (submitBtn) submitBtn.textContent = 'Confirmar';
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.textContent = 'Confirmar';
 
-  showView('reservationsView');
-});
+    showView('reservationsView');
+  });
+}
 
 // Botão cancelar reserva
 document.getElementById('cancelReserv').addEventListener('click', () => {

@@ -13,10 +13,9 @@
 }
 
 .btn.secondary {
-    background: var(--card);
-    padding: 8px 120px;
-    color: #f3f6ff;
-    border: none;
+    background: #e9f0ff;
+    color: var(--accent);
+    border: 1px solid #cfe0ff;
 }
 
 .card {
