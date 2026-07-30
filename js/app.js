@@ -74,18 +74,6 @@ function showView(id) {
   }
 }
 
-// Botão para adicionar itens de exemplo no catálogo
-document.getElementById('btnAddSample').addEventListener('click', () => {
-  const sampleItems = [
-    { id: 1, name: 'Canhão LED 1k', code: 'C-LED-1', total: 20 },
-    { id: 2, name: 'Canhão Spot 500', code: 'C-SP-500', total: 10 },
-    { id: 3, name: 'Par LED RGB', code: 'PAR-RGB', total: 30 }
-  ];
-  saveItems(sampleItems);
-  renderCatalog();
-  alert('Itens de exemplo adicionados');
-});
-
 // Ajusta estoque ao criar/editar reserva
 function adjustStockForReservation(reservation, multiplier) {
   const items = loadItems();
