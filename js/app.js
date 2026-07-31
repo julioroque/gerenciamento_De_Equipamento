@@ -22,6 +22,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     document.getElementById('userRole').textContent = 'Chefe';
     document.getElementById('btnNewReserv').style.display = 'block'; // chefe vê
     document.getElementById('btnCatalog').style.display = 'block';
+    document.getElementById('btnLogout').classList.remove('hidden');
     showSystem();
   } else if (username === 'funcionario' && password === '123') {
     currentUserRole = 'funcionario';
@@ -36,6 +37,7 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     document.getElementById('userRole').textContent = 'Funcionário';
     document.getElementById('btnNewReserv').style.display = 'none'; // funcionário não vê
     document.getElementById('btnCatalog').style.display = 'block';
+    document.getElementById('btnLogout').classList.remove('hidden');
     showSystem();
   } else {
     alert('Usuário ou senha inválidos');
@@ -48,6 +50,7 @@ document.getElementById('btnLogout').addEventListener('click', () => {
   // Limpa sessão persistida
   localStorage.removeItem('pront_user_role_v1');
   document.getElementById('userRole').textContent = 'Não logado';
+  document.getElementById('btnLogout').classList.add('hidden');
   document.getElementById('systemScreen').classList.add('hidden');
   document.getElementById('loginScreen').classList.remove('hidden');
 });
@@ -286,10 +289,12 @@ if (!localStorage.getItem(STORAGE.RES)) localStorage.setItem(STORAGE.RES, JSON.s
     document.getElementById('userRole').textContent = 'Chefe';
     document.getElementById('btnNewReserv').style.display = 'block';
     document.getElementById('btnCatalog').style.display = 'block';
+    document.getElementById('btnLogout').classList.remove('hidden');
   } else if (currentUserRole === 'funcionario') {
     document.getElementById('userRole').textContent = 'Funcionário';
     document.getElementById('btnNewReserv').style.display = 'none';
     document.getElementById('btnCatalog').style.display = 'block';
+    document.getElementById('btnLogout').classList.remove('hidden');
   }
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('systemScreen').classList.remove('hidden');
