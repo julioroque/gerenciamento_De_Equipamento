@@ -276,10 +276,17 @@ document.getElementById('cancelReserv').addEventListener('click', () => {
   form.date.disabled = false;
 });
 
-// Inicialização: garante que existam chaves no localStorage
-if (!localStorage.getItem(STORAGE.ITEMS)) localStorage.setItem(STORAGE.ITEMS, JSON.stringify([]));
-if (!localStorage.getItem(STORAGE.RES)) localStorage.setItem(STORAGE.RES, JSON.stringify([]));
+//buscar reservas do banco de dados
+fetch('https://gerenciamento-de-equipamento.vercel.app/api/reservas')
+  .then(r => r.json())
+  .then(data => renderReservations(data));
 
+// Criar reserva
+fetch('https://gerenciamento-de-equipamento.vercel.app/api/reservas', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(novaReserva)
+});
 // Restaura sessão de login, se houver
 (function restoreSession() {
   const savedRole = localStorage.getItem('pront_user_role_v1');
