@@ -4,5 +4,8 @@
     "express": "^5.2.1",
     "mongodb": "^7.5.0",
     "mongoose": "^9.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
   }
 }
