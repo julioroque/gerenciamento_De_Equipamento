@@ -7,9 +7,11 @@ app.use(express.json());
 app.use(cors());
 
 // Conectar ao MongoDB
-mongoose.connect('mongodb+srv://julioroquesilva18_db_user:<Q7Z5zi9GoAFxPUNt>@gerenciamento.eaybidp.mongodb.net/?appName=gerenciamento')
-.then(() => console.log('Conectado ao MongoDB'))
-.catch(err => console.error('Erro ao conectar ao MongoDB:', err));
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB conectado'))
+  .catch(err => console.error(err));
 
 const ReservaSchema = new mongoose.Schema({
     client_name: String,
